@@ -26,3 +26,8 @@
 *.exe
 *.out
 *.app
+
+# Vim temporary files
+*~
+*.swp
+*.swo
