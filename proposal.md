@@ -2,7 +2,11 @@
 
 *George Brighton & Joel Hoskin*
 
-We propose to apply the swarm intelligence algorithm 'Ant Colony Optimization' to the problem of Search.
+## Introduction
+
+Ant Colony Optimisation (ACO) is a probabilistic technique for finding optimal paths, based on the behaviour of ants searching for food<sup>1</sup>. We would like to investigate the effectiveness of this algorithm at solving search problems, including route-finding and the travelling salesman.
+
+
 
 Search is a graph problem to find the lowest cost path between 2 vertices. Specifically we'll use undirected graphs with edges labeled with the distance between vertices and try to find the shortest path.
 
@@ -11,3 +15,5 @@ Breath First Search is a deterministic algorithm which is guaranteed to find the
 Although Ant Colony Optimization can find optimal solutions in finite time it's difficult to estimate the speed at which it would find the optimal solution. Instead it's best suited to situations where a close to optimal solution is acceptable as it can find reasonable approximates faster than Breath First Search would find an exact solution. It can also applied to problems where the graph changes in real time where as Breath First Search would need to start again.
 
 We have chosen this problem as we hope to be able to visualize the graph and the algorithm as it runs. As well as being able to quantify how close to optimal our output is. 
+
+<sup>1</sup> <cite>Wolfram MathWorld, [Ant Colony Algorithm](http://mathworld.wolfram.com/AntColonyAlgorithm.html), accessed 01/03/15</cite>
