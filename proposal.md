@@ -10,7 +10,15 @@ Ant Colony Optimisation (ACO) is a probabilistic technique for finding optimal p
 
 Search aims to find the most efficient path between any two nodes in a graph. Similarly, the objective of the travelling salesman problem is to find the shortest path that visits *all* nodes once. ACO is relevant to both problems as it can be modelled using a graph. Our solution would use undirected graphs with edges detailing the distances between nodes, the objective being to minimise the total distance travelled, either between two nodes (search), or when visiting all of them (travelling salesman).
 
-Breath First Search is a deterministic algorithm which is guaranteed to find the optimal solution but it has a computational complexity of O(b^d) where b is the branching factor and d is the depth of the solution. This becomes intractable for large problems. Techniques like A* optimize this using heuristics to intelligently guess which parts of the graph to search first but finding the optimal solution remains computationally difficult.
+## Motivation
+
+There are already many algorithms that can be used to solve search and travelling salesman problems, some optimally, however they tend to be inefficient:
+
+ - Breadth-first search is optimal, but has a time complexity of <code>O(b<sup>d</sup>)</code>, where `b` is the branching factor and `d` is the depth of the solution.
+ - The travelling salesman problem can be solved using brute force in <code>O(n!)</code> time, however this makes it impractical for only 20 cities. The Held–Karp algorithm solves the problem in <code>O(n<sup>2</sup>2<sup>n</sup>)</code> time, however this is still intractable for large problems.
+
+
+Techniques like A* optimize this using heuristics to intelligently guess which parts of the graph to search first but finding the optimal solution remains computationally difficult.
 
 Although Ant Colony Optimization can find optimal solutions in finite time it's difficult to estimate the speed at which it would find the optimal solution. Instead it's best suited to situations where a close to optimal solution is acceptable as it can find reasonable approximates faster than Breath First Search would find an exact solution. It can also applied to problems where the graph changes in real time where as Breath First Search would need to start again.
 
