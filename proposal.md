@@ -1,5 +1,6 @@
-Group:
-George Brighton & Joel Hoskin
+# Using Ant Colony Optimisation to solve Search problems
+
+*George Brighton & Joel Hoskin*
 
 We propose to apply the swarm intelligence algorithm 'Ant Colony Optimization' to the problem of Search.
 
