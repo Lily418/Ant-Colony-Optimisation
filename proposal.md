@@ -17,10 +17,7 @@ There are already many algorithms that can be used to solve search and travellin
  - Breadth-first search is optimal, but has a time complexity of <code>O(b<sup>d</sup>)</code>, where `b` is the branching factor and `d` is the depth of the solution.
  - The travelling salesman problem can be solved using brute force in <code>O(n!)</code> time, however this makes it impractical for only 20 cities. The Held–Karp algorithm solves the problem in <code>O(n<sup>2</sup>2<sup>n</sup>)</code> time, however this is still intractable for large problems.
 
-
-Techniques like A* optimize this using heuristics to intelligently guess which parts of the graph to search first but finding the optimal solution remains computationally difficult.
-
-Although Ant Colony Optimization can find optimal solutions in finite time it's difficult to estimate the speed at which it would find the optimal solution. Instead it's best suited to situations where a close to optimal solution is acceptable as it can find reasonable approximates faster than Breath First Search would find an exact solution. It can also applied to problems where the graph changes in real time where as Breath First Search would need to start again.
+Heuristics can be employed to increase the rate at which both problems can be solved, however finding the optimal solution is still computationally difficult. ACO can find optimal solutions in finite time, however it is difficult to estimate the speed at which a solution can be calculated. It is better suited to problems where a close-to-optimal solution is acceptable.
 
 We have chosen this problem as we hope to be able to visualize the graph and the algorithm as it runs. As well as being able to quantify how close to optimal our output is. 
 
