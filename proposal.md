@@ -19,6 +19,8 @@ There are already many algorithms that can be used to solve search and travellin
 
 Heuristics can be employed to increase the rate at which both problems can be solved, however finding the optimal solution is still computationally difficult. ACO can find optimal solutions in finite time, however it is difficult to estimate the speed at which a solution can be calculated. It is better suited to problems where a close-to-optimal solution is acceptable.
 
-We have chosen this problem as we hope to be able to visualize the graph and the algorithm as it runs. As well as being able to quantify how close to optimal our output is. 
+## Suitability
+
+ACO is very suited to GPU programming, as each ant in the simulation is a simple, distinct entity. The complexity and power stems from the actions of these ants being combined, which is very similar to traditional parallel computing problems like flocking. The GPU would also make it simple to visualise the graph and state of the algorithm in real-time, and by implication allow easy assessment of produced solutions.
 
 <sup>1</sup> <cite>Wolfram MathWorld, [Ant Colony Algorithm](http://mathworld.wolfram.com/AntColonyAlgorithm.html), accessed 01/03/15</cite>
