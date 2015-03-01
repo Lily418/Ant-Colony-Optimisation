@@ -1,0 +1,12 @@
+Group:
+George Brighton & Joel Hoskin
+
+We propose to apply the swarm intelligence algorithm 'Ant Colony Optimization' to the problem of Search.
+
+Search is a graph problem to find the lowest cost path between 2 vertices. Specifically we'll use undirected graphs with edges labeled with the distance between vertices and try to find the shortest path.
+
+Breath First Search is a deterministic algorithm which is guaranteed to find the optimal solution but it has a computational complexity of O(b^d) where b is the branching factor and d is the depth of the solution. This becomes intractable for large problems. Techniques like A* optimize this using heuristics to intelligently guess which parts of the graph to search first but finding the optimal solution remains computationally difficult.
+
+Although Ant Colony Optimization can find optimal solutions in finite time it's difficult to estimate the speed at which it would find the optimal solution. Instead it's best suited to situations where a close to optimal solution is acceptable as it can find reasonable approximates faster than Breath First Search would find an exact solution. It can also applied to problems where the graph changes in real time where as Breath First Search would need to start again.
+
+We have chosen this problem as we hope to be able to visualize the graph and the algorithm as it runs. As well as being able to quantify how close to optimal our output is. 
