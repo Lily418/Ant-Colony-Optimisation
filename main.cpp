@@ -5,9 +5,10 @@
 #include "rapidjson/stringbuffer.h"
 
 #include <iostream>
-#include <chrono>
 #include <thread>
 #include <limits>
+#include <unistd.h>
+
 
 
 using namespace rapidjson;
@@ -25,11 +26,11 @@ const int nodeCount = 4;
 float graph[nodeCount][nodeCount];
 
 template <size_t nc>
-void initGraph(float (&graph)[nc][nc])
+void initGraph(float (&graph)[nc][nc], int n)
 {
     for(int i = 0; i < nc; i++){
         for(int j = 0; j < nc; j++){
-            graph[i][j] = 1;
+            graph[i][j] = n;
 
             if(i == 0 && j == 3){
                 graph[i][j] = std::numeric_limits<float>::infinity();
@@ -72,8 +73,19 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
     }
 }
 
+void ant_colony()
+{
+    int n = 1;
+    while(true){
+        initGraph(graph, n);
+        usleep(2000000);
+        n++;
+    }
+}
+
 int main() {
-    initGraph(graph);
+    initGraph(graph, 0);
+    std::thread t1(ant_colony);
 
     // Create a server endpoint
     server echo_server;
