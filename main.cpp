@@ -24,6 +24,7 @@ typedef server::message_ptr message_ptr;
 
 const int nodeCount = 4;
 float graph[nodeCount][nodeCount];
+float weights[nodeCount][nodeCount];
 
 template <size_t nc>
 void initGraph(float (&graph)[nc][nc], int n)
@@ -46,7 +47,12 @@ void writeGraphToBuffer(Writer<StringBuffer> &writer){
     for(int i = 0; i < nodeCount; i++){
         writer.StartArray();
         for(int j = 0; j < nodeCount; j++){
+            writer.StartObject();
+            writer.String("cost");
             writer.Double(graph[i][j]);
+            writer.String("weight");
+            writer.Double(weights[i][j]);
+            writer.EndObject();
         }
         writer.EndArray();
 
@@ -77,14 +83,15 @@ void ant_colony()
 {
     int n = 1;
     while(true){
-        initGraph(graph, n);
+        initGraph(weights, n);
         usleep(2000000);
         n++;
     }
 }
 
 int main() {
-    initGraph(graph, 0);
+    initGraph(graph, 1);
+    initGraph(weights, 0);
     std::thread t1(ant_colony);
 
     // Create a server endpoint

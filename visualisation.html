@@ -26,8 +26,8 @@
 
             for(var i = 0; i < graph.length; i++){
                 for(var j = i + 1; j < graph.length; j++){
-                    if(isFinite(graph[i][j])){
-                        edges.update({id: i + "," + j, from: i, to: j, label: graph[i][j]});
+                    if(isFinite(graph[i][j].cost)){
+                        edges.update({id: i + "," + j, from: i, to: j, label: graph[i][j].weight});
                     }
                 }
             }
