@@ -1,0 +1,61 @@
+<html>
+<head>
+<script src="node_modules/vis/dist/vis.js"></script>
+<link href="node_modules/vis/dist/vis.css" rel="stylesheet" type="text/css" />
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script type="text/javascript">
+$(function(){
+    var nodes = new vis.DataSet();
+    var edges = new vis.DataSet();
+
+    var webSocket = new WebSocket("ws://127.0.0.1:9002/ws");
+    webSocket.onopen = function (event) {
+        console.log('Socket Open');
+        setInterval(function(){
+            webSocket.send('KEEP_ALIVE');
+        }, 1000);
+
+    }
+
+    webSocket.onmessage = function (event) {
+        console.log(event.data);
+        var graph = JSON.parse(event.data)['graph'];
+        if(nodes.length == 0){
+            for(var i = 0; i < graph.length; i++){
+                nodes.add({id: i, label: i.toString()});
+            }
+
+            for(var i = 0; i < graph.length; i++){
+                for(var j = i + 1; j < graph.length; j++){
+                    if(isFinite(graph[i][j])){
+                     edges.add({id: i + "," + j, from: i, to: j, label: graph[i][j]});
+                    }
+                }
+            }
+
+        }
+
+
+    }
+
+    webSocket.onclose = function(event){
+        console.log('Socket Closed');
+    }
+
+
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+    var network = new vis.Network(container, data, {});
+});
+
+</script>
+</head>
+<body>
+    <div id="mynetwork"></div>
+</body>
+</html>
