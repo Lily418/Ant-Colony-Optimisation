@@ -9,6 +9,8 @@
 #include <limits>
 #include <unistd.h>
 
+#include "bfs.cpp"
+
 
 
 using namespace rapidjson;
@@ -22,19 +24,42 @@ using websocketpp::lib::bind;
 // pull out the type of messages sent by our config
 typedef server::message_ptr message_ptr;
 
-const int nodeCount = 4;
+const int nodeCount = 500;
+const float graphDensity = 0.002;
+
 float graph[nodeCount][nodeCount];
 float weights[nodeCount][nodeCount];
 
 template <size_t nc>
-void initGraph(float (&graph)[nc][nc], int n)
+void initGraph(float (&graph)[nc][nc])
+{
+    for(int i = 0; i < nc; i++){
+        graph[i][i] = 0;
+    }
+
+    for(int i = 0; i < nc; i++){
+        for(int j = i + 1; j < nc; j++){
+            float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            if(r < graphDensity){
+                graph[j][i] = graph[i][j] = 1;
+            } else {
+                graph[j][i] = graph[i][j] = std::numeric_limits<float>::infinity();
+            }
+        }
+    }
+
+    connect(graph);
+}
+
+template <size_t nc>
+void initWeights(float (&weights)[nc][nc])
 {
     for(int i = 0; i < nc; i++){
         for(int j = 0; j < nc; j++){
-            graph[i][j] = n;
-
-            if(i == 0 && j == 3){
-                graph[i][j] = std::numeric_limits<float>::infinity();
+            if(graph[i][j] != std::numeric_limits<float>::infinity()){
+                weights[i][j] = 1;
+            } else {
+                weights[i][j] = 0;
             }
         }
     }
@@ -83,15 +108,15 @@ void ant_colony()
 {
     int n = 1;
     while(true){
-        initGraph(weights, n);
+        //initGraph(weights, n);
         usleep(2000000);
         n++;
     }
 }
 
 int main() {
-    initGraph(graph, 1);
-    initGraph(weights, 0);
+    initGraph(graph);
+    initWeights(weights);
     std::thread t1(ant_colony);
 
     // Create a server endpoint

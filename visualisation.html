@@ -1,56 +1,91 @@
 <html>
 <head>
-    <script src="node_modules/vis/dist/vis.js"></script>
-    <link href="node_modules/vis/dist/vis.css" rel="stylesheet" type="text/css" />
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-    <script type="text/javascript">
-    $(function(){
-        var nodes = new vis.DataSet();
-        var edges = new vis.DataSet();
+<script src="node_modules/vis/dist/vis.js"></script>
+<link href="node_modules/vis/dist/vis.css" rel="stylesheet" type="text/css" />
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script type="text/javascript">
+$(function(){
+    var nodes = new vis.DataSet();
+    var edges = new vis.DataSet();
 
-        var webSocket = new WebSocket("ws://127.0.0.1:9002/ws");
-        webSocket.onopen = function (event) {
-            console.log('Socket Open');
-            setInterval(function(){
-                webSocket.send('KEEP_ALIVE');
-            }, 1000);
-
-        }
-
-        webSocket.onmessage = function (event) {
-            console.log(event.data);
-            var graph = JSON.parse(event.data)['graph'];
-            for(var i = 0; i < graph.length; i++){
-                nodes.update({id: i, label: i.toString()});
-            }
-
-            for(var i = 0; i < graph.length; i++){
-                for(var j = i + 1; j < graph.length; j++){
-                    if(isFinite(graph[i][j].cost)){
-                        edges.update({id: i + "," + j, from: i, to: j, label: graph[i][j].weight});
-                    }
-                }
-            }
-
-
-        }
-
-        webSocket.onclose = function(event){
-            console.log('Socket Closed');
-        }
-
-
-
+    function createGraph(){
         // create a network
         var container = document.getElementById('mynetwork');
         var data = {
             nodes: nodes,
             edges: edges
         };
-        var network = new vis.Network(container, data, {});
-    });
+        var network = new vis.Network(container, data, {
+            nodes: {
+                shape: 'dot',
+                radiusMin: 10,
+                radiusMax: 30,
+                fontSize: 12,
+                fontFace: "Tahoma"
+            },
+            edges: {
+                width: 0.15,
+                inheritColor: "from"
+            },
+            tooltip: {
+                delay: 200,
+                fontSize: 12,
+                color: {
+                    background: "#fff"
+                }
+            },
+            smoothCurves: {dynamic:false, type: "continuous"},
+            stabilize: false,
+            hideEdgesOnDrag: true,
+            dragNodes: false,
+            clustering: true
+        });
+    }
 
-    </script>
+
+
+    var webSocket = new WebSocket("ws://127.0.0.1:9002/ws");
+    webSocket.onopen = function (event) {
+        console.log('Socket Open');
+        //setInterval(function(){
+        //    webSocket.send('KEEP_ALIVE');
+        //}, 1000);
+        webSocket.send('KEEP_ALIVE');
+
+    }
+
+    var graphInit = false;
+    webSocket.onmessage = function (event) {
+        if(!graphInit){
+            var graph = JSON.parse(event.data)['graph'];
+            for(var i = 0; i < graph.length; i++){
+                nodes.update({id: i, label: i.toString()});
+            }
+            createGraph();
+        }
+
+        for(var i = 0; i < graph.length; i++){
+            for(var j = i + 1; j < graph.length; j++){
+
+
+                if(graph[i][j].cost != graph[j][i].cost || graph[i][i].cost != 0){
+                    console.log([{i: graph[i][j]}, {j: graph[j][i]}]);
+                    throw "Adjacency Matrix not consistent "
+                }
+
+                if(isFinite(graph[i][j].cost)){
+                    edges.update({id: i + "," + j, from: i, to: j, label: graph[i][j].cost});
+                }
+            }
+        }
+    }
+
+    webSocket.onclose = function(event){
+        console.log('Socket Closed');
+    }
+});
+
+</script>
 </head>
 <body>
     <div id="mynetwork"></div>
