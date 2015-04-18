@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 #include "bfs.cpp"
-
+#include "cpu.cpp"
 
 
 using namespace rapidjson;
@@ -24,10 +24,10 @@ using websocketpp::lib::bind;
 // pull out the type of messages sent by our config
 typedef server::message_ptr message_ptr;
 
-const int nodeCount = 500;
-const float graphDensity = 0.002;
-//const int nodeCount = 5;
-//const float graphDensity = 0.1;
+const int nodeCount = 150;
+const float graphDensity = 0.015;
+//const int nodeCount = 20;
+//const float graphDensity = 0.05;
 
 float graph[nodeCount][nodeCount];
 float weights[nodeCount][nodeCount];
@@ -64,13 +64,9 @@ void initWeights(float (&weights)[nc][nc])
 {
     for(int i = 0; i < nc; i++){
         for(int j = 0; j < nc; j++){
-            if(graph[i][j] != std::numeric_limits<float>::infinity()){
                 weights[i][j] = 1;
-            } else {
-                weights[i][j] = 0;
             }
         }
-    }
 }
 
 void writeGraphToBuffer(Writer<StringBuffer> &writer){
@@ -121,11 +117,9 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
 
 void ant_colony()
 {
-    int n = 1;
     while(true){
-        //initGraph(weights, n);
+        update(weights, graph, g.end);
         usleep(2000000);
-        n++;
     }
 }
 
@@ -161,6 +155,7 @@ int main() {
     g.start = newGoal->start;
     g.end   = newGoal->end;
 
+    initialize(g.start);
     std::thread t1(ant_colony);
 
     // Create a server endpoint
