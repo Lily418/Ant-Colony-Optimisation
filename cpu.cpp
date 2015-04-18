@@ -39,7 +39,6 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal){
                         //If ant has visited location previously then reduce the probability
                         for(int i = 0; i < step; i++){
                             if(paths[antIndex][i] == nodeIndex){
-                                // < 1 and smaller if i is larger
                                 probabilityOfAntMovingToNode[nodeIndex] *= ((1.0 / exp(i)) * 0.5 * IMPORTANCE_OF_PREVIOUSLY_VISITED);
                             } else {
                                 probabilityOfAntMovingToNode[nodeIndex] *= 1 * IMPORTANCE_OF_PREVIOUSLY_VISITED;
@@ -58,18 +57,13 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal){
                     probabilityOfAntMovingToNode[i] =  probabilityOfAntMovingToNode[i] / sumOfWeights;
                 }
 
+                //Select based on the probabilties a new location
                 std::discrete_distribution<int> distribution(probabilityOfAntMovingToNode.begin(), probabilityOfAntMovingToNode.end());
                 movementLocation = distribution(generator);
             }
             paths[antIndex][step + 1] = movementLocation;
         }
     }
-
-    /*for(int i = 0; i < MAX_STEPS; i++){
-        cout << paths[0][i] << " ";
-    }
-
-    cout << endl;*/
 
     //Pheromone evaporation
     for(int weightIndex = 0; weightIndex < nc; weightIndex++){
