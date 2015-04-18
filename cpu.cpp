@@ -4,8 +4,6 @@
 #include <array>
 #include <math.h>
 
-using namespace std;
-
 const int ANT_COUNT = 500;
 const int MAX_STEPS = 1000;
 int paths[ANT_COUNT][MAX_STEPS];
@@ -102,5 +100,5 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal)
         }
     }
 
-    cout << winning_ants << endl;
+    std::cout << winning_ants << std::endl;
 }
