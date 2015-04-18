@@ -26,9 +26,17 @@ typedef server::message_ptr message_ptr;
 
 const int nodeCount = 500;
 const float graphDensity = 0.002;
+//const int nodeCount = 5;
+//const float graphDensity = 0.1;
 
 float graph[nodeCount][nodeCount];
 float weights[nodeCount][nodeCount];
+
+struct goal{
+    unsigned int start;
+    unsigned int end;
+}g;
+
 
 template <size_t nc>
 void initGraph(float (&graph)[nc][nc])
@@ -67,6 +75,13 @@ void initWeights(float (&weights)[nc][nc])
 
 void writeGraphToBuffer(Writer<StringBuffer> &writer){
     writer.StartObject();
+    writer.String("goal");
+    writer.StartObject();
+    writer.String("start");
+    writer.Uint(g.start);
+    writer.String("end");
+    writer.Uint(g.end);
+    writer.EndObject();
     writer.String("graph");
     writer.StartArray();
     for(int i = 0; i < nodeCount; i++){
@@ -114,9 +129,38 @@ void ant_colony()
     }
 }
 
+
+
+struct goal *createGoal(){
+    int maxDistance = 0;
+    int n1 = 0;
+    int n2 = 0;
+
+    for(int i = 0; i < 100; i++){
+        int a = rand() % nodeCount;
+        int b = rand() % nodeCount;
+        int d = distance(a,b,graph);
+        if(d > maxDistance){
+            n1 = a;
+            n2 = b;
+            maxDistance = d;
+        }
+    }
+
+    struct goal *g = (struct goal*)malloc(sizeof(struct goal));
+    g->start = n1;
+    g->end   = n2;
+    return g;
+}
+
+
 int main() {
     initGraph(graph);
     initWeights(weights);
+    struct goal *newGoal = createGoal();
+    g.start = newGoal->start;
+    g.end   = newGoal->end;
+
     std::thread t1(ant_colony);
 
     // Create a server endpoint

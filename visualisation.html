@@ -16,29 +16,10 @@ $(function(){
             edges: edges
         };
         var network = new vis.Network(container, data, {
-            nodes: {
-                shape: 'dot',
-                radiusMin: 10,
-                radiusMax: 30,
-                fontSize: 12,
-                fontFace: "Tahoma"
-            },
-            edges: {
-                width: 0.15,
-                inheritColor: "from"
-            },
-            tooltip: {
-                delay: 200,
-                fontSize: 12,
-                color: {
-                    background: "#fff"
-                }
-            },
             smoothCurves: {dynamic:false, type: "continuous"},
             stabilize: false,
             hideEdgesOnDrag: true,
-            dragNodes: false,
-            clustering: true
+            dragNodes: false
         });
     }
 
@@ -56,10 +37,18 @@ $(function(){
 
     var graphInit = false;
     webSocket.onmessage = function (event) {
+        console.log(event.data);
         if(!graphInit){
-            var graph = JSON.parse(event.data)['graph'];
+            var json = JSON.parse(event.data);
+            var graph = json['graph'];
+            var goal = json['goal'];
             for(var i = 0; i < graph.length; i++){
-                nodes.update({id: i, label: i.toString()});
+                var color = {"background":"#97c3fd", "border": "#448ded"}
+                if(goal.start == i || goal.end == i){
+                    color.background = "#fd9797"
+                    color.border = "#ea2c2c"
+                }
+                nodes.update({"id": i, "label": i.toString(), "color": color});
             }
             createGraph();
         }
@@ -74,7 +63,7 @@ $(function(){
                 }
 
                 if(isFinite(graph[i][j].cost)){
-                    edges.update({id: i + "," + j, from: i, to: j, label: graph[i][j].cost});
+                    edges.update({"id": i + "," + j, "from": i, "to": j, "label": graph[i][j].cost, "color":"black"});
                 }
             }
         }
