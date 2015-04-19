@@ -6,7 +6,7 @@
 
 const unsigned int ANT_COUNT = 500;
 const unsigned int MAX_STEPS = 1000;
-int paths[ANT_COUNT][MAX_STEPS];
+size_t paths[ANT_COUNT][MAX_STEPS];
 std::default_random_engine generator;
 
 const float IMPORTANCE_OF_PHEROMONE = 1;
@@ -44,7 +44,7 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], size_t goal)
     //Ants randomly wander for MAX_STEPS
     for (unsigned int step = 0; step < MAX_STEPS - 1; step++) {
         for (unsigned int antIndex = 0; antIndex < ANT_COUNT; antIndex++) {
-            int movementLocation = paths[antIndex][step];
+            size_t movementLocation = paths[antIndex][step];
             if (paths[antIndex][step] != goal) {
                 std::array<float, nc> probabilityOfAntMovingToNode;
                 for (size_t nodeIndex = 0; nodeIndex < nc; nodeIndex++) {
@@ -71,7 +71,7 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], size_t goal)
                 normaliseProbabilityDistribution(probabilityOfAntMovingToNode);
 
                 //Select based on the probabilties a new location
-                std::discrete_distribution<int> distribution(probabilityOfAntMovingToNode.begin(), probabilityOfAntMovingToNode.end());
+                std::discrete_distribution<size_t> distribution(probabilityOfAntMovingToNode.begin(), probabilityOfAntMovingToNode.end());
                 movementLocation = distribution(generator);
             }
             paths[antIndex][step + 1] = movementLocation;
