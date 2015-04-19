@@ -4,7 +4,7 @@
 #include <array>
 #include <math.h>
 
-const int ANT_COUNT = 500;
+const unsigned int ANT_COUNT = 500;
 const int MAX_STEPS = 1000;
 int paths[ANT_COUNT][MAX_STEPS];
 std::default_random_engine generator;
@@ -16,7 +16,7 @@ const float TOTAL_PHEROMONE_FOR_TRAIL = 10000;
 
 void initialize(int startNodeId)
 {
-    for (int i = 0; i < ANT_COUNT; i++) {
+    for (unsigned int i = 0; i < ANT_COUNT; i++) {
         paths[i][0] = startNodeId;
     }
 }
@@ -43,7 +43,7 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal)
 {
     //Ants randomly wander for MAX_STEPS
     for (int step = 0; step < MAX_STEPS - 1; step++) {
-        for (int antIndex = 0; antIndex < ANT_COUNT; antIndex++) {
+        for (unsigned int antIndex = 0; antIndex < ANT_COUNT; antIndex++) {
             int movementLocation = paths[antIndex][step];
             if (paths[antIndex][step] != goal) {
                 std::array<float, nc> probabilityOfAntMovingToNode;
@@ -87,9 +87,9 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal)
         }
     }
 
-    int winning_ants = 0;
+    unsigned int winning_ants = 0;
     //Pheromone update
-    for (int pathIndex = 0; pathIndex < ANT_COUNT; pathIndex++) {
+    for (unsigned int pathIndex = 0; pathIndex < ANT_COUNT; pathIndex++) {
         //If the path reached the goal
         if (paths[pathIndex][MAX_STEPS - 1] == goal) {
             winning_ants++;
