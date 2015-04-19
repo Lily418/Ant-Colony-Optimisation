@@ -5,7 +5,7 @@
 #include <math.h>
 
 const unsigned int ANT_COUNT = 500;
-const int MAX_STEPS = 1000;
+const unsigned int MAX_STEPS = 1000;
 int paths[ANT_COUNT][MAX_STEPS];
 std::default_random_engine generator;
 
@@ -42,7 +42,7 @@ template <size_t nc>
 void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal)
 {
     //Ants randomly wander for MAX_STEPS
-    for (int step = 0; step < MAX_STEPS - 1; step++) {
+    for (unsigned int step = 0; step < MAX_STEPS - 1; step++) {
         for (unsigned int antIndex = 0; antIndex < ANT_COUNT; antIndex++) {
             int movementLocation = paths[antIndex][step];
             if (paths[antIndex][step] != goal) {
@@ -56,7 +56,7 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal)
                         probabilityOfAntMovingToNode[nodeIndex] = weights[paths[antIndex][step]][nodeIndex] * IMPORTANCE_OF_PHEROMONE;
 
                         //If ant has visited location previously then reduce the probability
-                        for (int i = 0; i < step; i++ ) {
+                        for (unsigned int i = 0; i < step; i++ ) {
                             if (paths[antIndex][i] == nodeIndex) {
                                 probabilityOfAntMovingToNode[nodeIndex] *= (1.0 / exp(i)) * 0.5 * IMPORTANCE_OF_PREVIOUSLY_VISITED;
                             }
@@ -93,7 +93,7 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal)
         //If the path reached the goal
         if (paths[pathIndex][MAX_STEPS - 1] == goal) {
             winning_ants++;
-            int length_of_path = MAX_STEPS;
+            unsigned int length_of_path = MAX_STEPS;
             //Paths tracks the position of the ant at each step, once an ant has reached the goal it will stay there
             //while other ants continue to move
             while (paths[pathIndex][length_of_path - 1] == goal) {
@@ -101,7 +101,7 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal)
             }
 
             //This will cause race conditions on GPU if 2 ants used the same edge at the same time
-            for (int i = 0; i < MAX_STEPS; i++) {
+            for (unsigned int i = 0; i < MAX_STEPS; i++) {
                 if (paths[pathIndex][i] != goal) {
                     weights[paths[pathIndex][i]][paths[pathIndex][i + 1]] += TOTAL_PHEROMONE_FOR_TRAIL / length_of_path;
                     weights[paths[pathIndex][i + 1]][paths[pathIndex][i]] = weights[paths[pathIndex][i]][paths[pathIndex][i + 1]];
