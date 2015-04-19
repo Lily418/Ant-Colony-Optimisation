@@ -45,15 +45,15 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], size_t goal)
     for (unsigned int step = 0; step < MAX_STEPS - 1; step++) {
         for (unsigned int antIndex = 0; antIndex < ANT_COUNT; antIndex++) {
             size_t movementLocation = paths[antIndex][step];
-            if (paths[antIndex][step] != goal) {
+            if (movementLocation != goal) {
                 std::array<float, nc> probabilityOfAntMovingToNode;
                 for (size_t nodeIndex = 0; nodeIndex < nc; nodeIndex++) {
-                    if (nodeIndex == paths[antIndex][step]
-                            || graph[paths[antIndex][step]][nodeIndex] == std::numeric_limits<float>::infinity()) {
+                    if (nodeIndex == movementLocation
+                            || graph[movementLocation][nodeIndex] == std::numeric_limits<float>::infinity()) {
                         probabilityOfAntMovingToNode[nodeIndex] = 0;
                     }
                     else {
-                        probabilityOfAntMovingToNode[nodeIndex] = weights[paths[antIndex][step]][nodeIndex] * IMPORTANCE_OF_PHEROMONE;
+                        probabilityOfAntMovingToNode[nodeIndex] = weights[movementLocation][nodeIndex] * IMPORTANCE_OF_PHEROMONE;
 
                         //If ant has visited location previously then reduce the probability
                         for (unsigned int i = 0; i < step; i++ ) {
