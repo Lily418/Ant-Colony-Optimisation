@@ -21,6 +21,23 @@ void initialize(int startNodeId)
     }
 }
 
+/* Scale values in an array so the sum of all values is 1. */
+template <size_t length>
+void normaliseProbabilityDistribution(std::array<float, length>& distribution)
+{
+    float sum = 0;
+
+    // sum the values
+    for (const float& n : distribution) {
+        sum += n;
+    }
+
+    // adjust them
+    for (float& n : distribution) {
+        n /= sum;
+    }
+}
+
 template <size_t nc>
 void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal)
 {
@@ -50,15 +67,8 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal)
                     }
                 }
 
-                //Make probabilities sum to 1
-                float sumOfWeights = 0;
-                for (int i = 0; i < nc; i++) {
-                    sumOfWeights += probabilityOfAntMovingToNode[i];
-                }
-
-                for (int i = 0; i < nc; i++) {
-                    probabilityOfAntMovingToNode[i] /= sumOfWeights;
-                }
+                // make probabilities sum to 1
+                normaliseProbabilityDistribution(probabilityOfAntMovingToNode);
 
                 //Select based on the probabilties a new location
                 std::discrete_distribution<int> distribution(probabilityOfAntMovingToNode.begin(), probabilityOfAntMovingToNode.end());
