@@ -39,7 +39,7 @@ void normaliseProbabilityDistribution(std::array<float, length>& distribution)
 }
 
 template <size_t nc>
-void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal)
+void update(float (&weights)[nc][nc], float (&graph)[nc][nc], size_t goal)
 {
     //Ants randomly wander for MAX_STEPS
     for (unsigned int step = 0; step < MAX_STEPS - 1; step++) {
@@ -47,7 +47,7 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal)
             int movementLocation = paths[antIndex][step];
             if (paths[antIndex][step] != goal) {
                 std::array<float, nc> probabilityOfAntMovingToNode;
-                for (int nodeIndex = 0; nodeIndex < nc; nodeIndex++) {
+                for (size_t nodeIndex = 0; nodeIndex < nc; nodeIndex++) {
                     if (nodeIndex == paths[antIndex][step]
                             || graph[paths[antIndex][step]][nodeIndex] == std::numeric_limits<float>::infinity()) {
                         probabilityOfAntMovingToNode[nodeIndex] = 0;
@@ -79,8 +79,8 @@ void update(float (&weights)[nc][nc], float (&graph)[nc][nc], int goal)
     }
 
     //Pheromone evaporation
-    for (int weightIndex = 0; weightIndex < nc; weightIndex++) {
-        for (int weightIndex2 = weightIndex + 1; weightIndex2 < nc; weightIndex2++) {
+    for (size_t weightIndex = 0; weightIndex < nc; weightIndex++) {
+        for (size_t weightIndex2 = weightIndex + 1; weightIndex2 < nc; weightIndex2++) {
             weights[weightIndex][weightIndex2] *= PHEROMONE_EVAPORATION;
             //Keep weights matrix consistent
             weights[weightIndex2][weightIndex]  = weights[weightIndex][weightIndex2];
