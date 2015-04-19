@@ -44,16 +44,16 @@ void update(float (&weights)[nodeCount][nodeCount], float (&graph)[nodeCount][no
     //Ants randomly wander for MAX_STEPS
     for (unsigned int step = 0; step < MAX_STEPS - 1; step++) {
         for (unsigned int antIndex = 0; antIndex < ANT_COUNT; antIndex++) {
-            size_t movementLocation = paths[antIndex][step];
-            if (movementLocation != goal) {
+            size_t position = paths[antIndex][step];
+            if (position != goal) {
                 std::array<float, nodeCount> probabilityOfAntMovingToNode;
                 for (size_t nodeIndex = 0; nodeIndex < nodeCount; nodeIndex++) {
-                    if (nodeIndex == movementLocation
-                            || graph[movementLocation][nodeIndex] == std::numeric_limits<float>::infinity()) {
+                    if (nodeIndex == position
+                            || graph[position][nodeIndex] == std::numeric_limits<float>::infinity()) {
                         probabilityOfAntMovingToNode[nodeIndex] = 0;
                     }
                     else {
-                        probabilityOfAntMovingToNode[nodeIndex] = weights[movementLocation][nodeIndex] * IMPORTANCE_OF_PHEROMONE;
+                        probabilityOfAntMovingToNode[nodeIndex] = weights[position][nodeIndex] * IMPORTANCE_OF_PHEROMONE;
 
                         //If ant has visited location previously then reduce the probability
                         for (unsigned int i = 0; i < step; i++ ) {
@@ -72,9 +72,9 @@ void update(float (&weights)[nodeCount][nodeCount], float (&graph)[nodeCount][no
 
                 //Select based on the probabilties a new location
                 std::discrete_distribution<size_t> distribution(probabilityOfAntMovingToNode.begin(), probabilityOfAntMovingToNode.end());
-                movementLocation = distribution(generator);
+                position = distribution(generator);
             }
-            paths[antIndex][step + 1] = movementLocation;
+            paths[antIndex][step + 1] = position;
         }
     }
 
