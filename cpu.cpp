@@ -34,7 +34,7 @@ size_t selectFromDistribution(std::array<float, nodeCount> probabilityDistributi
     float r = (float)rand() / (float)(RAND_MAX);
     float sum = 0;
     
-    for (int i = 0; i < nodeCount; i++) {
+    for (size_t i = 0; i < probabilityDistribution.size(); i++) {
         sum += probabilityDistribution[i];
         if (r < sum) {
             return i;
