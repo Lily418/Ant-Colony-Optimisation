@@ -84,7 +84,7 @@ void update(float (&weights)[nodeCount][nodeCount], float (&graph)[nodeCount][no
                     }
                     else {
                         // set the probability to the weight between the two nodes (will normalise later)
-                        probabilityOfAntMovingToNode[nodeIndex] = weights[position][nodeIndex] * IMPORTANCE_OF_PHEROMONE;
+                        probabilityOfAntMovingToNode[nodeIndex] = weights[paths[antIndex][step]][nodeIndex] * IMPORTANCE_OF_PHEROMONE;
 
                         // if the ant has previously visited the node, reduce the probability
                         for (unsigned int i = 0; i < step; i++ ) {
