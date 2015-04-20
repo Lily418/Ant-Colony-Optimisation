@@ -1,6 +1,6 @@
 #include <limits>
 #include <iostream>
-#include <random>
+#include <cstdlib>
 #include <array>
 #include <math.h>
 
@@ -8,24 +8,41 @@
 const unsigned int ANT_COUNT = 500;
 
 /* The maximum number of moves each ant will make. */
-const unsigned int MAX_STEPS = 1000;
+const unsigned int MAX_STEPS = 300;
 
-const float IMPORTANCE_OF_PHEROMONE = 1;
-const float IMPORTANCE_OF_PREVIOUSLY_VISITED = 500;
-const float PHEROMONE_EVAPORATION = 0.5;
-const float TOTAL_PHEROMONE_FOR_TRAIL = 10000;
+const float IMPORTANCE_OF_PHEROMONE = 5;
+const float IMPORTANCE_OF_PREVIOUSLY_VISITED = 1;
+const float PHEROMONE_EVAPORATION = 0.01;
+const float TOTAL_PHEROMONE_FOR_TRAIL = 100;
 
 /* Details the position of each ant at each step.
    Once the ant has reached the goal, it will stay there while other ants not at the goal continue to move. */
 size_t paths[ANT_COUNT][MAX_STEPS];
-
-std::default_random_engine generator;
 
 void initialize(int startNodeId)
 {
     for (unsigned int i = 0; i < ANT_COUNT; i++) {
         paths[i][0] = startNodeId;
     }
+}
+
+/* Select a random value from an array, where each element's value is the probability of
+   that element being chosen. */
+template <size_t nodeCount>
+size_t selectFromDistribution(std::array<float, nodeCount> probabilityDistribution)
+{
+    float r = (float)rand() / (float)(RAND_MAX);
+    float sum = 0;
+    
+    for (int i = 0; i < nodeCount; i++) {
+        sum += probabilityDistribution[i];
+        if (r < sum) {
+            return i;
+        }
+    }
+
+    std::cout << "Error, Did not select from distribution" << std::endl;
+    return 0;
 }
 
 /* Scale values in an array so the sum of all values is 1. */
@@ -72,7 +89,7 @@ void update(float (&weights)[nodeCount][nodeCount], float (&graph)[nodeCount][no
                         // if the ant has previously visited the node, reduce the probability
                         for (unsigned int i = 0; i < step; i++ ) {
                             if (paths[antIndex][i] == nodeIndex) {
-                                probabilityOfAntMovingToNode[nodeIndex] *= (1.0 / exp(i)) * 0.5 * IMPORTANCE_OF_PREVIOUSLY_VISITED;
+                                probabilityOfAntMovingToNode[nodeIndex] *= 0.5 * IMPORTANCE_OF_PREVIOUSLY_VISITED;
                             }
                             else {
                                 probabilityOfAntMovingToNode[nodeIndex] *= 1 * IMPORTANCE_OF_PREVIOUSLY_VISITED;
@@ -85,8 +102,7 @@ void update(float (&weights)[nodeCount][nodeCount], float (&graph)[nodeCount][no
                 normaliseProbabilityDistribution(probabilityOfAntMovingToNode);
 
                 // select a random new location based on the probabilties
-                std::discrete_distribution<size_t> distribution(probabilityOfAntMovingToNode.begin(), probabilityOfAntMovingToNode.end());
-                position = distribution(generator);
+                position = selectFromDistribution(probabilityOfAntMovingToNode);
             }
 
             // set the next position to this new set
